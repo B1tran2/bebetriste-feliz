@@ -30,14 +30,8 @@
           style="width: 100%; height: 60vh;"
         ></model-viewer>
 
-        <!-- Controles de animación -->
-        <div
-          class="anim-controls"
-          id="animControls"
-          style="display:flex; gap:10px; justify-content:center; align-items:center; margin-top:12px; flex-wrap:wrap;"
-        >
-          <label for="animSelect">Animación:</label>
-          <select id="animSelect"></select>
+        <!-- (Opcional) Controles simples: si no los quieres, borra este bloque completo -->
+        <div class="anim-controls" style="display:flex; gap:10px; justify-content:center; margin-top:12px;">
           <button type="button" id="playBtn">▶️ Reproducir</button>
           <button type="button" id="pauseBtn">⏸️ Pausa</button>
         </div>
@@ -61,17 +55,13 @@
       <p>Créditos del modelo: (editar aquí)</p>
     </footer>
 
-    <!-- Script de animación (LIMPIO, sin mezclas) -->
     <script>
       (function () {
         const mv = document.getElementById("mv");
-        const select = document.getElementById("animSelect");
+        const msg = document.querySelector("[data-error-message]");
         const playBtn = document.getElementById("playBtn");
         const pauseBtn = document.getElementById("pauseBtn");
-        const controls = document.getElementById("animControls");
-        const msg = document.querySelector("[data-error-message]");
 
-        // Si hay error cargando el modelo (ruta mal, GLB no válido, etc.)
         mv.addEventListener("error", () => {
           if (msg) {
             msg.hidden = false;
@@ -81,49 +71,30 @@
 
         mv.addEventListener("load", () => {
           const anims = mv.availableAnimations || [];
-          console.log("Animaciones disponibles:", anims);
-
-          if (!anims.length) {
-            // No hay animaciones en el GLB
-            if (controls) controls.style.display = "none";
+          // Por defecto: animación 2 si existe, si no animación 1
+          if (anims.length > 1) {
+            mv.animationName = anims[1];
+          } else if (anims.length === 1) {
+            mv.animationName = anims[0];
+          } else {
             if (msg) {
               msg.hidden = false;
               msg.textContent = "Este modelo no trae animación.";
             }
             return;
           }
-
-          // Rellenar desplegable
-          select.innerHTML = "";
-          anims.forEach((name, i) => {
-            const opt = document.createElement("option");
-            opt.value = name;
-            opt.textContent = `${i + 1}. ${name}`;
-            select.appendChild(opt);
-          });
-
-          // Por defecto: animación 2 si existe (tu caso), si no, la 1
-          const defaultIndex = anims.length > 1 ? 1 : 0;
-          select.selectedIndex = defaultIndex;
-
-          mv.animationName = anims[defaultIndex];
           mv.play();
         });
 
-        // Cambiar animación manualmente
-        select.addEventListener("change", () => {
-          mv.animationName = select.value;
-          mv.play();
-        });
-
-        playBtn.addEventListener("click", () => mv.play());
-        pauseBtn.addEventListener("click", () => mv.pause());
+        // Si borras los botones, puedes borrar también este bloque
+        if (playBtn) playBtn.addEventListener("click", () => mv.play());
+        if (pauseBtn) pauseBtn.addEventListener("click", () => mv.pause());
       })();
     </script>
 
-    <!-- Tu script general (AR button, etc.) -->
     <script src="script.js"></script>
   </body>
 </html>
+
 
 
