@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles.css" />
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
   </head>
+
   <body>
     <main class="container">
       <header class="hero">
@@ -32,6 +33,7 @@
         <!-- Controles de animación -->
         <div
           class="anim-controls"
+          id="animControls"
           style="display:flex; gap:10px; justify-content:center; align-items:center; margin-top:12px; flex-wrap:wrap;"
         >
           <label for="animSelect">Animación:</label>
@@ -40,62 +42,11 @@
           <button type="button" id="pauseBtn">⏸️ Pausa</button>
         </div>
 
-        <script>
-          (function () {
-            const mv = document.getElementById('mv');
-            const select = document.getElementById('animSelect');
-            const playBtn = document.getElementById('playBtn');
-            const pauseBtn = document.getElementById('pauseBtn');
-
-            mv.addEventListener('load', () => {
-              const anims = mv.availableAnimations || [];
-              console.log('Animaciones disponibles:', anims);
-
-              if (!anims.length) {
-                const msg = document.querySelector('[data-error-message]');
-                if (msg) {
-                  msg.hidden = false;
-                  msg.textContent = 'Este modelo no trae animación. Necesitas un GLB con animaciones (rig/acciones).';
-                }
-                // Oculta controles si no hay animación
-                const controls = document.querySelector('.anim-controls');
-                if (controls) controls.style.display = 'none';
-                return;
-              }
-
-              // Rellenar desplegable
-              select.innerHTML = '';
-              anims.forEach((name, i) => {
-                const opt = document.createElement('option');
-                opt.value = name;
-                opt.textContent = `${i + 1}. ${name}`;
-                select.appendChild(opt);
-              });
-
-              // Por defecto: usar la animación 2 si existe (tu caso), si no la 1
-              const defaultIndex = anims[1] ? 1 : 0;
-              select.selectedIndex = defaultIndex;
-              mv.animationName = anims[defaultIndex];
-              mv.play();
-            });
-
-            select.addEventListener('change', () => {
-              mv.animationName = select.value;
-              mv.play();
-            });
-
-            playBtn.addEventListener('click', () => mv.play());
-            pauseBtn.addEventListener('click', () => mv.pause());
-          })();
-        </script>
-
         <p class="error-message" data-error-message hidden>Modelo no encontrado o no compatible.</p>
       </section>
 
       <section class="action-area">
-        <button class="primary-button" type="button" data-ar-button>
-          Ver en AR
-        </button>
+        <button class="primary-button" type="button" data-ar-button>Ver en AR</button>
         <p class="status-message" data-status-message hidden></p>
         <a class="ar-link" rel="ar" href="feliz_bebe.usdz">Abrir en AR</a>
       </section>
@@ -110,7 +61,69 @@
       <p>Créditos del modelo: (editar aquí)</p>
     </footer>
 
+    <!-- Script de animación (LIMPIO, sin mezclas) -->
+    <script>
+      (function () {
+        const mv = document.getElementById("mv");
+        const select = document.getElementById("animSelect");
+        const playBtn = document.getElementById("playBtn");
+        const pauseBtn = document.getElementById("pauseBtn");
+        const controls = document.getElementById("animControls");
+        const msg = document.querySelector("[data-error-message]");
+
+        // Si hay error cargando el modelo (ruta mal, GLB no válido, etc.)
+        mv.addEventListener("error", () => {
+          if (msg) {
+            msg.hidden = false;
+            msg.textContent = "Modelo no encontrado o no compatible.";
+          }
+        });
+
+        mv.addEventListener("load", () => {
+          const anims = mv.availableAnimations || [];
+          console.log("Animaciones disponibles:", anims);
+
+          if (!anims.length) {
+            // No hay animaciones en el GLB
+            if (controls) controls.style.display = "none";
+            if (msg) {
+              msg.hidden = false;
+              msg.textContent = "Este modelo no trae animación.";
+            }
+            return;
+          }
+
+          // Rellenar desplegable
+          select.innerHTML = "";
+          anims.forEach((name, i) => {
+            const opt = document.createElement("option");
+            opt.value = name;
+            opt.textContent = `${i + 1}. ${name}`;
+            select.appendChild(opt);
+          });
+
+          // Por defecto: animación 2 si existe (tu caso), si no, la 1
+          const defaultIndex = anims.length > 1 ? 1 : 0;
+          select.selectedIndex = defaultIndex;
+
+          mv.animationName = anims[defaultIndex];
+          mv.play();
+        });
+
+        // Cambiar animación manualmente
+        select.addEventListener("change", () => {
+          mv.animationName = select.value;
+          mv.play();
+        });
+
+        playBtn.addEventListener("click", () => mv.play());
+        pauseBtn.addEventListener("click", () => mv.pause());
+      })();
+    </script>
+
+    <!-- Tu script general (AR button, etc.) -->
     <script src="script.js"></script>
   </body>
 </html>
+
 
