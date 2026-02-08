@@ -16,13 +16,16 @@
 
       <section class="viewer-card">
         <model-viewer
-          src="feliz_bebe.glb"
-          alt="Modelo 3D bebé feliz"
-          camera-controls
-          touch-action="pan-y"
-          shadow-intensity="0.5"
-          loading="eager"
-        ></model-viewer>
+  id="mv"
+  src="./feliz_bebe.glb"
+  ar
+  camera-controls
+  autoplay
+  animation-loop
+  style="width: 100%; height: 60vh;"
+>
+</model-viewer>
+
         <p class="error-message" data-error-message hidden>Modelo no encontrado o no compatible.</p>
       </section>
 
