@@ -29,6 +29,19 @@ const toVideoPriority = (message) => {
   showMessage(arNote, message);
 };
 
+const isElementVisible = (element) => {
+  if (!element) return false;
+  const styles = window.getComputedStyle(element);
+  const rect = element.getBoundingClientRect();
+  return (
+    styles.display !== "none" &&
+    styles.visibility !== "hidden" &&
+    styles.opacity !== "0" &&
+    rect.width > 0 &&
+    rect.height > 0
+  );
+};
+
 const ensureVideoSource = () => {
   if (!videoElement) return;
   if (!videoElement.getAttribute("src")) {
@@ -49,7 +62,7 @@ const openVideoMode = async () => {
   try {
     await videoElement.play();
   } catch {
-    showMessage(arNote, "Pulsa play para iniciar el vídeo.");
+    showMessage(arNote, "Autoplay bloqueado. Pulsa play para iniciar el vídeo.");
   }
 };
 
@@ -69,18 +82,29 @@ const setHappyDefaultAnimation = () => {
       modelViewer.animationName = names[1];
       modelViewer.autoplay = true;
       modelViewer.play({ repetitions: Infinity });
+      return;
+    }
+
+    if (names.length === 1) {
+      modelViewer.animationName = names[0];
+      modelViewer.autoplay = true;
+      modelViewer.play({ repetitions: Infinity });
     }
   };
 
   modelViewer.addEventListener("load", applyAnimation, { once: true });
 };
 
+const disableARAndPromoteVideo = (message) => {
+  document.body.classList.add("no-ar");
+  toVideoPriority(message);
+};
+
 const evaluateARSupport = () => {
   if (!modelViewer || !arSlotButton) return;
 
   if (!isMobile) {
-    document.body.classList.add("no-ar");
-    toVideoPriority("Abre esto en móvil para AR. Aquí tienes modo vídeo.");
+    disableARAndPromoteVideo("Abre esto en móvil para AR. Aquí tienes modo vídeo.");
     return;
   }
 
@@ -88,13 +112,25 @@ const evaluateARSupport = () => {
     showMessage(deviceNote, "En Samsung Internet puede fallar AR. Si pasa, abre esta página en Chrome.");
   }
 
-  setTimeout(() => {
-    const canAR = Boolean(modelViewer.canActivateAR);
-    if (!canAR) {
-      document.body.classList.add("no-ar");
-      toVideoPriority("AR no disponible en este dispositivo; usa el modo vídeo.");
+  if (isIOS) {
+    showMessage(
+      deviceNote,
+      "En iPhone la animación en AR puede verse estática; usa ‘Ver vídeo’ si pasa."
+    );
+  }
+
+  const verifyArButtonVisibility = () => {
+    if (!isElementVisible(arSlotButton)) {
+      disableARAndPromoteVideo("AR no disponible en este dispositivo; usa el modo vídeo.");
+      return;
     }
-  }, 500);
+
+    arSlotButton.hidden = false;
+  };
+
+  verifyArButtonVisibility();
+  setTimeout(verifyArButtonVisibility, 500);
+  setTimeout(verifyArButtonVisibility, 1200);
 };
 
 if (modelViewer) {
@@ -119,8 +155,14 @@ closeVideoButton?.addEventListener("click", closeVideoMode);
 fullscreenButton?.addEventListener("click", async () => {
   if (!videoElement) return;
   ensureVideoSource();
+
   if (videoElement.requestFullscreen) {
     await videoElement.requestFullscreen();
+    return;
+  }
+
+  if (videoElement.webkitEnterFullscreen) {
+    videoElement.webkitEnterFullscreen();
   }
 });
 

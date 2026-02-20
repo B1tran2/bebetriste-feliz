@@ -15,17 +15,15 @@ HTML/CSS/JS:
 - `script.js`
 - `README.md`
 
-Modelos 3D (ya existentes):
+Modelos 3D:
 - `bebe_triste.glb`
 - `bebe_triste.usdz`
 - `feliz_bebe.glb`
 - `feliz_bebe.usdz`
 
-Vídeos/posters (nuevos):
+Vídeos:
 - `feliz.mp4`
 - `triste.mp4`
-- `poster_feliz.jpg` (opcional recomendado)
-- `poster_triste.jpg` (opcional recomendado)
 
 > Todos estos archivos van en la **raíz** del repositorio.
 
@@ -49,8 +47,8 @@ Vídeos/posters (nuevos):
   - `https://TUUSUARIO.github.io/bebetriste-feliz/feliz.html?mode=video`
   - `https://TUUSUARIO.github.io/bebetriste-feliz/triste.html?mode=video`
 
-## Recomendaciones importantes
+## Notas de compatibilidad
 
-- Si en **Samsung** no abre AR, prueba en **Chrome para Android**.
-- En **iPhone**, la animación en AR depende del `.usdz`; si aparece estático, usa **Modo vídeo**.
+- En Samsung Internet puede fallar AR; abre la misma URL en Chrome.
+- En iPhone la animación en AR depende del USDZ; usa modo vídeo si queda estático.
 - Si el 3D no carga o AR no está disponible, el sitio muestra opción de vídeo para mantener una experiencia fluida.
