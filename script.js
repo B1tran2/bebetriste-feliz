@@ -126,7 +126,7 @@ const evaluateARSupport = () => {
 
   const verifyArButtonVisibility = () => {
     if (!isElementVisible(arSlotButton)) {
-      disableARAndPromoteVideo("AR no disponible en este dispositivo; usa el modo vídeo.");
+      disableARAndPromoteVideo("AR no disponible aquí. Usa el vídeo (siempre disponible).");
       return;
     }
 
@@ -146,7 +146,7 @@ if (modelViewer) {
     if (viewerCard) {
       viewerCard.hidden = true;
     }
-    toVideoPriority("No se pudo cargar el 3D. Mostramos el modo vídeo.");
+    toVideoPriority("El 3D no se puede cargar aquí. El vídeo funciona en todos los móviles.");
     openVideoMode();
   });
 

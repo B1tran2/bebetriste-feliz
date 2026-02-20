@@ -1,9 +1,9 @@
-# Bebé feliz / bebé triste (3D + AR + modo vídeo)
+# Bebé feliz / bebé triste (3D + AR + vídeo siempre disponible)
 
-Proyecto estático para GitHub Pages con prioridad en móviles:
+Proyecto estático para GitHub Pages (sin build tools):
 - Visor 3D con `<model-viewer>`.
-- AR cuando el dispositivo/navegador lo soporte.
-- Fallback sin instalación con **Modo vídeo** para que nadie se quede sin ver contenido.
+- AR cuando el dispositivo/navegador lo soporta.
+- Fallback garantizado con vídeo: **inline siempre visible** + overlay “Modo vídeo” + enlace directo al MP4.
 
 ## Archivos que debes subir (lista exacta)
 
@@ -16,10 +16,10 @@ HTML/CSS/JS:
 - `README.md`
 
 Modelos 3D:
-- `bebe_triste.glb`
-- `bebe_triste.usdz`
 - `feliz_bebe.glb`
 - `feliz_bebe.usdz`
+- `bebe_triste.glb`
+- `bebe_triste.usdz`
 
 Vídeos:
 - `feliz.mp4`
@@ -27,14 +27,14 @@ Vídeos:
 
 No hay posters/miniaturas en esta versión.
 
-> Todos estos archivos van en la **raíz** del repositorio.
+> Todo debe ir en la **raíz** del repositorio.
 
 ## Publicación en GitHub Pages
 
-1. Crea (o usa) el repositorio `bebetriste-feliz`.
-2. Sube todos los archivos anteriores a la rama `main`.
+1. Crea (o usa) el repo `bebetriste-feliz`.
+2. Sube todos los archivos a la rama `main`.
 3. Ve a `Settings` → `Pages`.
-4. En `Build and deployment`, selecciona:
+4. En `Build and deployment` selecciona:
    - `Deploy from a branch`
    - Branch: `main`
    - Folder: `/(root)`
@@ -45,12 +45,15 @@ No hay posters/miniaturas en esta versión.
 - `https://TUUSUARIO.github.io/bebetriste-feliz/`
 - `https://TUUSUARIO.github.io/bebetriste-feliz/feliz.html`
 - `https://TUUSUARIO.github.io/bebetriste-feliz/triste.html`
-- Atajos directos a vídeo:
-  - `https://TUUSUARIO.github.io/bebetriste-feliz/feliz.html?mode=video`
-  - `https://TUUSUARIO.github.io/bebetriste-feliz/triste.html?mode=video`
 
-## Notas de compatibilidad
+Atajos directos al overlay de vídeo (siguen funcionando):
+- `https://TUUSUARIO.github.io/bebetriste-feliz/feliz.html?mode=video`
+- `https://TUUSUARIO.github.io/bebetriste-feliz/triste.html?mode=video`
 
+## Compatibilidad y fallback
+
+- El vídeo inline está siempre disponible y no depende de JavaScript.
+- Cada página incluye enlace directo al MP4: **“Abrir vídeo en otra pestaña”**.
 - En Samsung Internet puede fallar AR; abre la misma URL en Chrome.
 - En iPhone la animación en AR depende del USDZ; usa modo vídeo si queda estático.
-- Si el 3D no carga o AR no está disponible, el sitio muestra opción de vídeo para mantener una experiencia fluida.
+- Si falla el 3D o AR, la experiencia principal sigue siendo el vídeo.

@@ -151,6 +151,34 @@ model-viewer {
   margin: 10px 0 0;
 }
 
+
+.inline-video-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.inline-video-card h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.inline-video-card video {
+  width: 100%;
+  max-height: 60vh;
+  border-radius: 12px;
+  background: #000;
+}
+
+.inline-video-link {
+  color: var(--primary-press);
+  font-weight: 700;
+}
+
 .link-row {
   display: flex;
   flex-wrap: wrap;
