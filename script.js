@@ -1,62 +1,129 @@
-const ua = navigator.userAgent || navigator.vendor || window.opera;
-const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const ua = navigator.userAgent || "";
+const platform = navigator.platform || "";
+const isIOS = /iPhone|iPad|iPod/i.test(ua) || (platform === "MacIntel" && navigator.maxTouchPoints > 1);
 const isAndroid = /Android/i.test(ua);
+const isMobile = isIOS || isAndroid;
+const isSamsungInternet = /SamsungBrowser/i.test(ua);
 
-const arButton = document.querySelector("[data-ar-button]");
-const statusMessage = document.querySelector("[data-status-message]");
-const arLink = document.querySelector(".ar-link[rel='ar']");
+const page = document.querySelector("[data-page]");
 const modelViewer = document.querySelector("model-viewer");
-const errorMessage = document.querySelector("[data-error-message]");
+const deviceNote = document.querySelector("[data-device-note]");
+const arNote = document.querySelector("[data-ar-note]");
+const modelError = document.querySelector("[data-model-error]");
+const viewerCard = document.querySelector("[data-viewer-card]");
+const openVideoButton = document.querySelector("[data-open-video]");
+const closeVideoButton = document.querySelector("[data-close-video]");
+const fullscreenButton = document.querySelector("[data-fullscreen]");
+const videoOverlay = document.querySelector("[data-video-overlay]");
+const videoElement = document.querySelector("video[data-video]");
+const arSlotButton = modelViewer?.querySelector("[slot='ar-button']");
 
-const getAbsoluteModelUrl = (fileName) => {
-  const baseUrl = new URL(".", window.location.href);
-  return new URL(fileName, baseUrl).href;
+const showMessage = (node, text) => {
+  if (!node) return;
+  node.textContent = text;
+  node.hidden = false;
 };
 
-const showStatus = (message) => {
-  if (!statusMessage) return;
-  statusMessage.textContent = message;
-  statusMessage.hidden = false;
+const toVideoPriority = (message) => {
+  document.body.classList.add("video-priority");
+  showMessage(arNote, message);
 };
 
-const disableAR = (message) => {
-  if (arButton) {
-    arButton.disabled = true;
+const ensureVideoSource = () => {
+  if (!videoElement) return;
+  if (!videoElement.getAttribute("src")) {
+    const src = videoElement.dataset.src;
+    if (src) {
+      videoElement.src = src;
+      videoElement.load();
+    }
   }
-  showStatus(message);
 };
 
-if (modelViewer && errorMessage) {
+const openVideoMode = async () => {
+  if (!videoOverlay || !videoElement) return;
+  ensureVideoSource();
+  videoOverlay.hidden = false;
+  videoOverlay.setAttribute("aria-hidden", "false");
+
+  try {
+    await videoElement.play();
+  } catch {
+    showMessage(arNote, "Pulsa play para iniciar el vídeo.");
+  }
+};
+
+const closeVideoMode = () => {
+  if (!videoOverlay || !videoElement) return;
+  videoOverlay.hidden = true;
+  videoOverlay.setAttribute("aria-hidden", "true");
+  videoElement.pause();
+};
+
+const setHappyDefaultAnimation = () => {
+  if (!modelViewer || page?.dataset.page !== "feliz") return;
+
+  const applyAnimation = () => {
+    const names = modelViewer.availableAnimations || [];
+    if (names.length > 1) {
+      modelViewer.animationName = names[1];
+      modelViewer.autoplay = true;
+      modelViewer.play({ repetitions: Infinity });
+    }
+  };
+
+  modelViewer.addEventListener("load", applyAnimation, { once: true });
+};
+
+const evaluateARSupport = () => {
+  if (!modelViewer || !arSlotButton) return;
+
+  if (!isMobile) {
+    document.body.classList.add("no-ar");
+    toVideoPriority("Abre esto en móvil para AR. Aquí tienes modo vídeo.");
+    return;
+  }
+
+  if (isSamsungInternet) {
+    showMessage(deviceNote, "En Samsung Internet puede fallar AR. Si pasa, abre esta página en Chrome.");
+  }
+
+  setTimeout(() => {
+    const canAR = Boolean(modelViewer.canActivateAR);
+    if (!canAR) {
+      document.body.classList.add("no-ar");
+      toVideoPriority("AR no disponible en este dispositivo; usa el modo vídeo.");
+    }
+  }, 500);
+};
+
+if (modelViewer) {
   modelViewer.addEventListener("error", () => {
-    errorMessage.hidden = false;
+    if (modelError) {
+      modelError.hidden = false;
+    }
+    if (viewerCard) {
+      viewerCard.hidden = true;
+    }
+    toVideoPriority("No se pudo cargar el 3D. Mostramos el modo vídeo.");
+    openVideoMode();
   });
+
+  setHappyDefaultAnimation();
+  evaluateARSupport();
 }
 
-if (arButton && arLink) {
-  arButton.addEventListener("click", () => {
-    if (isIOS) {
-      arLink.click();
-      return;
-    }
+openVideoButton?.addEventListener("click", openVideoMode);
+closeVideoButton?.addEventListener("click", closeVideoMode);
 
-    if (isAndroid) {
-      const glbUrl = getAbsoluteModelUrl(modelViewer?.getAttribute("src") || "");
-      const encodedUrl = encodeURIComponent(glbUrl);
-      const intentUrl = `intent://arvr.google.com/scene-viewer/1.0?file=${encodedUrl}&mode=ar_only#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;end;`;
-      const fallbackUrl = `https://arvr.google.com/scene-viewer/1.0?file=${encodedUrl}&mode=ar_only`;
-
-      window.location.href = intentUrl;
-
-      setTimeout(() => {
-        window.location.href = fallbackUrl;
-      }, 1200);
-      return;
-    }
-
-    disableAR("AR no disponible en este dispositivo; usa el visor 3D");
-  });
-
-  if (!isIOS && !isAndroid) {
-    disableAR("Abre esto en un móvil para AR");
+fullscreenButton?.addEventListener("click", async () => {
+  if (!videoElement) return;
+  ensureVideoSource();
+  if (videoElement.requestFullscreen) {
+    await videoElement.requestFullscreen();
   }
+});
+
+if (new URLSearchParams(window.location.search).get("mode") === "video") {
+  openVideoMode();
 }

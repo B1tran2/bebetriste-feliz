@@ -3,40 +3,72 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Bebé feliz en AR</title>
-    <link rel="stylesheet" href="styles.css" />
+    <title>Bebé feliz · 3D, AR y vídeo</title>
+    <link rel="stylesheet" href="./styles.css" />
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
   </head>
   <body>
-    <main class="container">
+    <main class="container" data-page="feliz">
       <header class="hero">
         <h1>Bebé feliz</h1>
-        <p class="instruction">Mueve el móvil y apunta a una superficie.</p>
+        <p>Mueve el móvil y apunta a una superficie.</p>
       </header>
 
-      <section class="viewer-card">
+      <p class="status-text" data-device-note hidden></p>
+
+      <section class="viewer-card" data-viewer-card>
         <model-viewer
-          src="feliz_bebe.glb"
+          id="viewer"
+          src="./feliz_bebe.glb"
+          ios-src="./feliz_bebe.usdz"
           alt="Modelo 3D bebé feliz"
+          ar
+          ar-modes="scene-viewer webxr quick-look"
           camera-controls
-          touch-action="pan-y"
-          shadow-intensity="0.5"
+          autoplay
+          reveal="auto"
           loading="eager"
-        ></model-viewer>
-        <p class="error-message" data-error-message hidden>Modelo no encontrado o no compatible.</p>
+          shadow-intensity="0.7"
+          environment-image="neutral"
+        >
+          <button class="primary-button ar-button" slot="ar-button" type="button" aria-label="Ver en AR">
+            Ver en AR
+          </button>
+        </model-viewer>
+        <p class="error-text" data-model-error hidden>Modelo no encontrado o no compatible. Usa el modo vídeo.</p>
       </section>
 
-      <section class="action-area">
-        <button class="primary-button" type="button" data-ar-button>
-          Ver en AR
-        </button>
-        <p class="status-message" data-status-message hidden></p>
-        <a class="ar-link" rel="ar" href="feliz_bebe.usdz">Abrir en AR</a>
+      <section class="actions-row">
+        <button class="secondary-button" type="button" data-open-video>Ver vídeo</button>
+      </section>
+
+      <p class="status-text" data-ar-note hidden></p>
+
+      <section class="video-overlay" data-video-overlay hidden aria-hidden="true">
+        <div class="video-shell">
+          <div class="video-header">
+            <strong>Modo vídeo</strong>
+            <button class="ghost-button" type="button" data-close-video>Cerrar</button>
+          </div>
+          <video
+            data-video
+            data-src="./feliz.mp4"
+            poster="./poster_feliz.jpg"
+            preload="none"
+            playsinline
+            muted
+            loop
+            controls
+          ></video>
+          <div class="video-controls">
+            <button class="primary-button" type="button" data-fullscreen> Pantalla completa </button>
+          </div>
+        </div>
       </section>
 
       <nav class="link-row">
-        <a href="triste.html">Ir a Bebé triste</a>
-        <a href="index.html">Volver al inicio</a>
+        <a href="./triste.html">Ir a Bebé triste</a>
+        <a href="./index.html">Volver al inicio</a>
       </nav>
     </main>
 
@@ -44,6 +76,6 @@
       <p>Créditos del modelo: (editar aquí)</p>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="./script.js"></script>
   </body>
 </html>

@@ -3,20 +3,37 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AR Bebés - Inicio</title>
-    <link rel="stylesheet" href="styles.css" />
+    <title>Bebé feliz / triste · AR y vídeo</title>
+    <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <main class="container">
       <header class="hero">
-        <h1>Selecciona un modelo</h1>
-        <p>Abre en tu móvil para ver en realidad aumentada.</p>
+        <h1>Bebé feliz / bebé triste</h1>
+        <p>Elige una experiencia: 3D + AR o ir directo al modo vídeo.</p>
       </header>
 
-      <section class="button-grid">
-        <a class="primary-button" href="triste.html">Bebé triste</a>
-        <a class="primary-button" href="feliz.html">Bebé feliz</a>
+      <section class="home-grid" aria-label="Opciones">
+        <article class="home-card">
+          <h2>Bebé feliz</h2>
+          <p>Modelo 3D animado, AR cuando sea compatible y vídeo como respaldo.</p>
+          <div class="home-actions">
+            <a class="primary-button" href="./feliz.html">Abrir experiencia</a>
+            <a class="secondary-button" href="./feliz.html?mode=video">Ir directo a vídeo</a>
+          </div>
+        </article>
+
+        <article class="home-card">
+          <h2>Bebé triste</h2>
+          <p>Visor 3D, AR compatible y modo vídeo para todos los dispositivos.</p>
+          <div class="home-actions">
+            <a class="primary-button" href="./triste.html">Abrir experiencia</a>
+            <a class="secondary-button" href="./triste.html?mode=video">Ir directo a vídeo</a>
+          </div>
+        </article>
       </section>
+
+      <p class="status-text">Tip: si AR no abre, toca “Ver vídeo” y tendrás una vista fluida sin instalación.</p>
     </main>
 
     <footer>

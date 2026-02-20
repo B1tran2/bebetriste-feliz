@@ -1,29 +1,56 @@
-# Bebé triste / Bebé feliz - AR sin app
+# Bebé feliz / bebé triste (3D + AR + modo vídeo)
 
-Proyecto web estático listo para GitHub Pages que abre AR desde QR sin app adicional. Compatible con iOS (AR Quick Look) y Android (Scene Viewer).
+Proyecto estático para GitHub Pages con prioridad en móviles:
+- Visor 3D con `<model-viewer>`.
+- AR cuando el dispositivo/navegador lo soporte.
+- Fallback sin instalación con **Modo vídeo** para que nadie se quede sin ver contenido.
 
-## Pasos para publicar
+## Archivos que debes subir (lista exacta)
 
-1. **Crea un repositorio en GitHub** llamado `bebetriste-feliz`.
-2. **Copia estos archivos** (`index.html`, `triste.html`, `feliz.html`, `styles.css`, `script.js`, `README.md`) en la raíz del repo.
-3. **Añade los 4 modelos 3D en la raíz** del repo con estos nombres exactos:
-   - `bebe_triste.glb`
-   - `bebe_triste.usdz`
-   - `feliz_bebe.glb`
-   - `feliz_bebe.usdz`
-4. **Activa GitHub Pages**:
-   - `Settings → Pages → Deploy from branch`
+HTML/CSS/JS:
+- `index.html`
+- `feliz.html`
+- `triste.html`
+- `styles.css`
+- `script.js`
+- `README.md`
+
+Modelos 3D (ya existentes):
+- `bebe_triste.glb`
+- `bebe_triste.usdz`
+- `feliz_bebe.glb`
+- `feliz_bebe.usdz`
+
+Vídeos/posters (nuevos):
+- `feliz.mp4`
+- `triste.mp4`
+- `poster_feliz.jpg` (opcional recomendado)
+- `poster_triste.jpg` (opcional recomendado)
+
+> Todos estos archivos van en la **raíz** del repositorio.
+
+## Publicación en GitHub Pages
+
+1. Crea (o usa) el repositorio `bebetriste-feliz`.
+2. Sube todos los archivos anteriores a la rama `main`.
+3. Ve a `Settings` → `Pages`.
+4. En `Build and deployment`, selecciona:
+   - `Deploy from a branch`
    - Branch: `main`
    - Folder: `/(root)`
-5. **URLs finales (ejemplo)**:
-   - `https://B1tran2.github.io/bebetriste-feliz/triste.html`
-   - `https://TUUSUARIO.github.io/bebetriste-feliz/feliz.html`
-6. **Crea 2 códigos QR** apuntando a esas URLs y compártelos.
+5. Guarda y espera el despliegue.
 
----
+## URLs finales (ejemplo)
 
-### Notas
-- El visor 3D usa `<model-viewer>` desde CDN oficial.
-- Si un modelo no carga, se mostrará: **"Modelo no encontrado o no compatible"**.
-- En escritorio, el botón de AR se desactiva con el mensaje: **"Abre esto en un móvil para AR"**.
-- En móviles sin AR, se mostrará: **"AR no disponible en este dispositivo; usa el visor 3D"**.
+- `https://TUUSUARIO.github.io/bebetriste-feliz/`
+- `https://TUUSUARIO.github.io/bebetriste-feliz/feliz.html`
+- `https://TUUSUARIO.github.io/bebetriste-feliz/triste.html`
+- Atajos directos a vídeo:
+  - `https://TUUSUARIO.github.io/bebetriste-feliz/feliz.html?mode=video`
+  - `https://TUUSUARIO.github.io/bebetriste-feliz/triste.html?mode=video`
+
+## Recomendaciones importantes
+
+- Si en **Samsung** no abre AR, prueba en **Chrome para Android**.
+- En **iPhone**, la animación en AR depende del `.usdz`; si aparece estático, usa **Modo vídeo**.
+- Si el 3D no carga o AR no está disponible, el sitio muestra opción de vídeo para mantener una experiencia fluida.
