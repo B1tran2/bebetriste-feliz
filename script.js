@@ -5,7 +5,7 @@ const isAndroid = /Android/i.test(ua);
 const isMobile = isIOS || isAndroid;
 const isSamsungInternet = /SamsungBrowser/i.test(ua);
 
-const page = document.querySelector("[data-page]");
+const pageName = document.querySelector("main[data-page]")?.dataset.page || "";
 const modelViewer = document.querySelector("model-viewer");
 const deviceNote = document.querySelector("[data-device-note]");
 const arNote = document.querySelector("[data-ar-note]");
@@ -33,12 +33,15 @@ const isElementVisible = (element) => {
   if (!element) return false;
   const styles = window.getComputedStyle(element);
   const rect = element.getBoundingClientRect();
+  const rects = element.getClientRects();
+
   return (
     styles.display !== "none" &&
     styles.visibility !== "hidden" &&
     styles.opacity !== "0" &&
     rect.width > 0 &&
-    rect.height > 0
+    rect.height > 0 &&
+    rects.length > 0
   );
 };
 
@@ -71,13 +74,15 @@ const closeVideoMode = () => {
   videoOverlay.hidden = true;
   videoOverlay.setAttribute("aria-hidden", "true");
   videoElement.pause();
+  videoElement.currentTime = 0;
 };
 
 const setHappyDefaultAnimation = () => {
-  if (!modelViewer || page?.dataset.page !== "feliz") return;
+  if (!modelViewer || pageName !== "feliz") return;
 
   const applyAnimation = () => {
     const names = modelViewer.availableAnimations || [];
+
     if (names.length > 1) {
       modelViewer.animationName = names[1];
       modelViewer.autoplay = true;
@@ -143,6 +148,12 @@ if (modelViewer) {
     }
     toVideoPriority("No se pudo cargar el 3D. Mostramos el modo vídeo.");
     openVideoMode();
+  });
+
+  modelViewer.addEventListener("ar-status", (event) => {
+    if (event?.detail?.status === "failed") {
+      disableARAndPromoteVideo("No se pudo iniciar AR aquí. Usa el modo vídeo (sin instalación).");
+    }
   });
 
   setHappyDefaultAnimation();

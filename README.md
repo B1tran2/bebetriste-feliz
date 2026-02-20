@@ -25,6 +25,8 @@ Vídeos:
 - `feliz.mp4`
 - `triste.mp4`
 
+No hay posters/miniaturas en esta versión.
+
 > Todos estos archivos van en la **raíz** del repositorio.
 
 ## Publicación en GitHub Pages
